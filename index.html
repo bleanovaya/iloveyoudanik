@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>my love</title>
+  <link rel="stylesheet" href="./normalize.css">
+  <style>
+    body {
+        margin: 0 auto;
+        font-family: 'Courier New', Courier, monospace;
+        font-weight: 600;
+        font-size: 20px;
+        background: #ffc8db;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        text-align: center;
+    }
+    .cat {
+        font-size: 200px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .cat:hover {
+        transform: scale(1.1);
+    }
+    .message {
+        margin-top: 30px;
+        font-size: 40px;
+        min-height: 30px;
+        color: #d63384;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .message.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .counter {
+        margin-top: 40px;
+        font-size: 18px;
+        color: #555;
+    }
+  </style>
+</head>
+<body>
+    <div class="cat">🦊</div>
+    <div>Даник, нажми на меня<br> можно несколько раз:3</div>
+    <div class="message" id="message"></div>
+    <div class="counter" id="counter"></div>
+    <script>
+        const messages = [
+            "Ты мой любимый лисёнок",
+            "Я безумно люблю твою улыбку",
+            "Я нашла в тебе родное",
+            "Когда я смотрю на тебя, мне кажется это навечно",
+            "Твои касания самые нежные и тёплые",
+            "Твои шутки - мои любимые",
+            "Ты моё самый сладкий секрет",
+            "Ты делаешь мои дни светлее",
+            "Рядом с тобой мне так тепло",
+            "Спасибо, что ты у меня есть",
+            "Даняяяя, я люблю тебя",
+            "Рядом со мной ты - самый нежный, сильный и красивый мужчина"
+        ];
+        const cat = document.querySelector(".cat");
+        const messageBlock = document.getElementById("message");
+        
+        cat.addEventListener("click", function() {
+            const random = Math.floor(Math.random() * messages.length);
+            messageBlock.classList.remove("show");
+            setTimeout(() => {
+            messageBlock.textContent = messages[random];
+            messageBlock.classList.add("show");
+            }, 200);
+        });
+
+
+        const startDate = new Date("2026-02-17");
+        function updateCounter() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            document.getElementById("counter").textContent =
+            "Мы вместе уже: " + days + " дней " + hours + " ч " + minutes + " мин 🤍";
+        }
+        setInterval(updateCounter, 60000);
+        updateCounter();
+    </script>
+</body>
+</html>
