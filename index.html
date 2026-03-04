@@ -23,6 +23,12 @@
         font-size: 200px;
         cursor: pointer;
         transition: transform 0.2s;
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% {transform: scale(1.05); }
+        100% {transform: scale(1); }
     }
     .cat:hover {
         transform: scale(1.1);
@@ -39,6 +45,22 @@
     .message.show {
         opacity: 1;
         transform: translateY(0);
+    }
+    .heart {
+        position: absolute;
+        font-size: 20px;
+        animation: floatUp 1s ease-out forwards;
+        pointer-events: none;
+    }
+    @keyframes floatUp {
+        0% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(-100px) scale(1.5);
+        }
     }
     .counter {
         margin-top: 40px;
@@ -70,16 +92,65 @@
         const cat = document.querySelector(".cat");
         const messageBlock = document.getElementById("message");
         
+        let lastIndex = -1;
+        let typingInterval = null;
+        let isTyping = false;
+        
         cat.addEventListener("click", function() {
-            const random = Math.floor(Math.random() * messages.length);
-            messageBlock.classList.remove("show");
-            setTimeout(() => {
-            messageBlock.textContent = messages[random];
-            messageBlock.classList.add("show");
-            }, 200);
+            if (isTyping) return;
+            let random;
+            do {
+                random = Math.floor(Math.random() * messages.length);
+            } while (random === lastIndex);
+            lastIndex = random;
+            createHearts();
+            typeText(messages[random]);
         });
 
 
+        function createHearts() {
+    for (let i = 0; i < 6; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "💗";
+
+        const rect = cat.getBoundingClientRect();
+
+        heart.style.left = rect.left + rect.width / 2 + "px";
+        heart.style.top = rect.top + rect.height / 2 + "px";
+
+        heart.style.position = "fixed";
+
+        document.body.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, 1000);
+    }
+}
+
+function typeText(text) {
+    if (typingInterval) {
+        clearInterval(typingInterval);
+    }
+
+    messageBlock.textContent = "";
+    messageBlock.classList.add("show");
+
+    let index = 0;
+    isTyping = true;
+
+    typingInterval = setInterval(() => {
+        messageBlock.textContent += text[index];
+        index++;
+
+        if (index >= text.length) {
+            clearInterval(typingInterval);
+            typingInterval = null;
+            isTyping = false;
+        }
+    }, 40);
+}
         const startDate = new Date("2026-02-17");
         function updateCounter() {
             const now = new Date();
