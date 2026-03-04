@@ -145,37 +145,51 @@
         ];
         const cat = document.querySelector(".cat");
         const messageBlock = document.getElementById("message");
-        
-        let lastIndex = -1;
+
         let typingInterval = null;
         let isTyping = false;
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        let shuffledMessages = shuffleArray(messages);
+        let currentIndex = 0;
+        
+        function getNextMessage() {
+            if (currentIndex >= shuffledMessages.length) {
+                shuffledMessages = shuffleArray(messages);
+                currentIndex = 0;
+            }
+            return shuffledMessages[currentIndex++];
+        }
         
         cat.addEventListener("click", function() {
             if (isTyping) return;
-            let random;
-            do {
-                random = Math.floor(Math.random() * messages.length);
-            } while (random === lastIndex);
-            lastIndex = random;
+            
+            const nextMessage = getNextMessage();
+            
             createHearts();
-            typeText(messages[random]);
+            typeText(nextMessage);
         });
-
-
+        
         function createHearts() {
-    for (let i = 0; i < 6; i++) {
-        const heart = document.createElement("div");
-        heart.className = "heart";
-        heart.textContent = "💗";
-
-        const rect = cat.getBoundingClientRect();
-
-        heart.style.left = rect.left + rect.width / 2 + "px";
-        heart.style.top = rect.top + rect.height / 2 + "px";
-
-        heart.style.position = "fixed";
-
-        document.body.appendChild(heart);
+            for (let i = 0; i < 6; i++) {
+                const heart = document.createElement("div");
+                heart.className = "heart";
+                heart.textContent = "💗";
+                
+                const rect = cat.getBoundingClientRect();
+                
+                heart.style.left = rect.left + rect.width / 2 + "px";
+                heart.style.top = rect.top + rect.height / 2 + "px";
+                heart.style.position = "fixed";
+                
+                document.body.appendChild(heart);
 
         setTimeout(() => {
             heart.remove();
@@ -205,19 +219,25 @@ function typeText(text) {
         }
     }, 40);
 }
-        const startDate = new Date("2026-02-17");
-        function updateCounter() {
-            const now = new Date();
-            const diff = now - startDate;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / (1000 * 60)) % 60);
-            document.getElementById("counter").textContent =
-            "Мы вместе уже: " + days + " дней " + hours + " ч " + minutes + " мин 🖤";
-        }
-        setInterval(updateCounter, 60000);
-        updateCounter();
-        const starsContainer = document.querySelector(".stars");
+
+const startDate = new Date(2026, 1, 17);
+
+function updateCounter() {
+    const now = new Date();
+    const diff = now - startDate;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    document.getElementById("counter").textContent =
+        "Мы вместе уже: " + days + " дней " + hours + " ч " + minutes + " мин 🖤";
+}
+
+setInterval(updateCounter, 60000);
+updateCounter();
+
+const starsContainer = document.querySelector(".stars");
 
 function createStars() {
     for (let i = 0; i < 25; i++) {
@@ -233,7 +253,7 @@ function createStars() {
 }
 
 createStars();
-    </script>
+</script>
     <div class="signature">
         для любимого Дани, чтобы улыбнулся!
     </div>
